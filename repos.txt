@@ -1,0 +1,7 @@
+# BITBUCKET_CLONE_URL GITHUB_ORG GITHUB_REPO
+https://example-user@bitbucket.org/example-workspace/order-service.git example-org order-service
+https://example-user@bitbucket.org/example-workspace/payment-service.git example-org payment-service
+https://example-user@bitbucket.org/example-workspace/user-profile-api.git example-org user-profile-api
+https://example-user@bitbucket.org/example-workspace/notification-worker.git example-org notification-worker
+https://example-user@bitbucket.org/example-workspace/reporting-dashboard.git example-org reporting-dashboard
+}
