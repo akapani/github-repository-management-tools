@@ -40,13 +40,43 @@ gh auth login
 ## Repository Layout
 
 ```text
-repo-migration-tool/
-├── migrate_repos.sh
-├── repos.txt
-├── logs/
-├── reports/
+github-repository-migration-tools/
 ├── README.md
-└── USAGE.md
+├── LICENSE
+├── CHANGELOG.md
+├── CONTRIBUTING.md
+├── .editorconfig
+├── .gitignore
+│
+├── migrationTool/
+│   ├── migrate_repos.sh       (Main script)
+│   ├── repos.txt              (Your input file)
+│   └── USAGE.md
+│
+├── archiveTool/
+│   ├── archive_repos.sh       (Main script)
+│   ├── repos.txt              (Your input file)
+│   └── USAGE.md
+│
+├── examples/
+│   ├── repos_migration_example.txt
+│   ├── repos_archive_example.txt
+│   └── repos_unarchive_example.txt
+│
+├── docs/
+│   ├── TROUBLESHOOTING.md      (Common issues)
+│   ├── ARCHITECTURE.md         (How it works)
+│   └── CUSTOMIZATION.md        (How to extend)
+│
+├── lib/
+│   └── common.sh              (Shared utilities)
+│
+├── tests/
+│   ├── README.md              (Testing guide)
+│   └── validate_*.sh          (Output validators)
+│
+├── logs/                       (Generated on first run)
+└── reports/                    (Generated on first run)
 ```
 
 ---

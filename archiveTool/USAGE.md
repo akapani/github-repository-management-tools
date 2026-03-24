@@ -36,6 +36,28 @@ Before running the script, ensure:
 
 ---
 
+## Repository Structure
+
+Key files in the project:
+
+```text
+github-repository-migration-tools/
+├── archiveTool/
+│   ├── archive_repos.sh    ← This script
+│   ├── repos.txt           ← Your input file
+│   └── USAGE.md
+├── examples/               ← Template repos.txt files
+├── docs/                   ← Guides (ARCHITECTURE, CUSTOMIZATION, etc.)
+├── README.md
+└── [other root files]
+```
+
+Outputs are created automatically:
+- `logs/archive_*.log` – Detailed execution logs
+- `reports/archive_report_*.csv` – Summary in CSV format
+
+---
+
 ## Input File: `repos.txt`
 
 The script operates **only** on repositories listed in `repos.txt`.
