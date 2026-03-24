@@ -1,6 +1,25 @@
-# Archive Repositories – Usage Guide
+# Archive Tool – Usage Guide
 
-This tool allows you to **archive or unarchive GitHub repositories in bulk** using an explicit input list, with safety controls and audit output.
+Archive or unarchive GitHub repositories in bulk with safety controls and audit logging.
+
+## Quick Start
+
+For the impatient:
+
+```bash
+# 1. Create repos.txt with OWNER REPO on each line
+# 2. Run dry-run first
+./archive_repos.sh --dry-run repos.txt  # Preview what will happen
+
+# 3. Review logs/archive_*.log and reports/archive_report_*.csv
+# 4. Archive for real
+./archive_repos.sh repos.txt
+
+# Or unarchive:
+./archive_repos.sh --unarchive repos.txt
+```
+
+⏱️ **Typical time per repository**: 1–2 seconds
 
 ---
 
@@ -42,7 +61,7 @@ Notes:
 
 ---
 
-## Dry‑Run Mode (Recommended First)
+## Dry-Run Mode (Recommended First)
 
 ```bash
 ./archive_repos.sh --dry-run repos.txt
@@ -116,3 +135,30 @@ These outputs can be used for:
 3. Review logs and CSV
 4. Run the real command
 5. Store outputs as evidence
+
+---
+
+## Exit Codes
+
+| Code | Meaning |
+|------|----------|
+| `0` | Success (all repos processed; check CSV for individual status) |
+| `1` | Precondition failed (missing GitHub CLI, not authenticated, file not found) |
+
+⚠️ **Note**: Individual repo failures don't halt the script (idempotent). Check CSV/logs for per-repo status.
+
+---
+
+## Troubleshooting
+
+- **"No action needed"**: Repo is already in the requested state
+- **Permission denied**: Ensure `gh auth login` ran and you have admin access
+- **Command failed**: Check logs for specific errors
+
+For detailed troubleshooting, see [docs/TROUBLESHOOTING.md](../docs/TROUBLESHOOTING.md).
+
+---
+
+## How It Works
+
+For technical details on the archive process, see [docs/ARCHITECTURE.md](../docs/ARCHITECTURE.md).

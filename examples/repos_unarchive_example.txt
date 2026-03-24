@@ -1,0 +1,17 @@
+# Example repository list for unarchiving GitHub repositories
+# Format: OWNER REPO
+#
+# Instructions:
+# 1. Copy this file to repos.txt in the archiveTool/ directory
+# 2. List repositories you want to unarchive
+# 3. Run with --dry-run first to see what would happen
+# 4. Run the actual command: ./archive_repos.sh --unarchive repos.txt
+#
+# Example lines (uncomment and modify as needed):
+
+# Unarchive repositories in the "my-company" organization
+# my-company legacy-repo-v1
+# my-company archived-service
+# my-company old-project
+
+# Note: Use --dry-run to preview changes

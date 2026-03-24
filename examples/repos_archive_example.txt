@@ -1,0 +1,17 @@
+# Example repository list for archiving GitHub repositories
+# Format: OWNER REPO
+#
+# Instructions:
+# 1. Copy this file to repos.txt in the archiveTool/ directory
+# 2. List repositories you want to archive
+# 3. Run with --dry-run first to see what would happen
+# 4. Run the actual command: ./archive_repos.sh repos.txt
+#
+# Example lines (uncomment and modify as needed):
+
+# Archive repositories in the "my-company" organization
+# my-company legacy-repo-v1
+# my-company legacy-repo-v2
+# my-company deprecated-service
+
+# Note: You can also unarchive repos with: ./archive_repos.sh --unarchive repos.txt

@@ -1,10 +1,15 @@
 #!/usr/bin/env bash
-set -uo pipefail
+set -euo pipefail
 
 INPUT_FILE="${1:-repos.txt}"
 RUN_ID="$(date +%Y%m%d_%H%M%S)"
-LOG_FILE="migration_${RUN_ID}.log"
-CSV_FILE="migration_report_${RUN_ID}.csv"
+LOG_DIR="logs"
+REPORT_DIR="reports"
+LOG_FILE="${LOG_DIR}/migration_${RUN_ID}.log"
+CSV_FILE="${REPORT_DIR}/migration_report_${RUN_ID}.csv"
+
+# Ensure output directories exist
+mkdir -p "$LOG_DIR" "$REPORT_DIR"
 
 # Topics to apply to every successfully validated repo
 TOPIC_1="topic-example"

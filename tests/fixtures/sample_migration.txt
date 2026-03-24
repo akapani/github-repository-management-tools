@@ -1,0 +1,12 @@
+# Sample migration test data
+# Format: SOURCE_URL GITHUB_ORG GITHUB_REPO
+#
+# IMPORTANT: Update these with real repositories you can test with
+# For testing, it's recommended to use:
+# - Non-critical source repositories
+# - A test/staging GitHub organization
+# - A small number of repos (1-3) for initial testing
+#
+# Example (replace with your repos):
+# https://example@bitbucket.org/workspace/test-repo-1.git test-org test-repo-1
+# https://example@bitbucket.org/workspace/test-repo-2.git test-org test-repo-2
