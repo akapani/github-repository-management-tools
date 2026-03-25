@@ -1,14 +1,20 @@
 #!/usr/bin/env bash
-set -uo pipefail
+set -euo pipefail
 
 INPUT_FILE="${1:-repos.txt}"
 RUN_ID="$(date +%Y%m%d_%H%M%S)"
-LOG_FILE="migration_${RUN_ID}.log"
-CSV_FILE="migration_report_${RUN_ID}.csv"
+LOG_DIR="logs"
+REPORT_DIR="reports"
+LOG_FILE="${LOG_DIR}/migration_${RUN_ID}.log"
+CSV_FILE="${REPORT_DIR}/migration_report_${RUN_ID}.csv"
+
+# Ensure output directories exist
+mkdir -p "$LOG_DIR" "$REPORT_DIR"
 
 # Topics to apply to every successfully validated repo
 TOPIC_1="topic-example"
 TOPIC_2="topic-example"
+TOPIC_3="topic-example"
 
 # --- Helpers ---
 log() { echo "[$(date +'%Y-%m-%d %H:%M:%S')] $*" | tee -a "$LOG_FILE"; }
@@ -53,7 +59,7 @@ fi
 
 log "Starting migration run_id=$RUN_ID"
 log "Input: $INPUT_FILE"
-log "Topics: $TOPIC_1, $TOPIC_2"
+log "Topics: $TOPIC_1, $TOPIC_2, $TOPIC_3"
 log "CSV report: $CSV_FILE"
 
 # --- Main loop ---
@@ -95,43 +101,46 @@ while read -r BB_URL GH_ORG GH_REPO; do
     # 2) Mirror clone from Bitbucket
     rm -rf "$WORKDIR" 2>/dev/null || true
     log "Cloning mirror..."
-    git clone --mirror "$BB_URL" "$WORKDIR" >/dev/null
-
-    pushd "$WORKDIR" >/dev/null
-
-    # Source counts from local mirror
-    SRC_BRANCHES="$(count_local_heads)"
-    SRC_TAGS="$(count_local_tags)"
-    log "Source counts -> branches=$SRC_BRANCHES tags=$SRC_TAGS"
-
-    # 3) Mirror push to GitHub
-    log "Pushing mirror to GitHub..."
-    git remote remove github >/dev/null 2>&1 || true
-    git remote add github "https://github.com/${FULL_REPO}.git"
-    git push --mirror github >/dev/null
-
-    # 4) Destination counts from remote
-    DST_BRANCHES="$(count_remote_heads "https://github.com/${FULL_REPO}.git")"
-    DST_TAGS="$(count_remote_tags  "https://github.com/${FULL_REPO}.git")"
-    log "Dest counts   -> branches=$DST_BRANCHES tags=$DST_TAGS"
-
-    # 5) Validate counts
-    if [[ "$SRC_BRANCHES" == "$DST_BRANCHES" && "$SRC_TAGS" == "$DST_TAGS" ]]; then
-      log "Validation PASSED (branch/tag counts match)."
-
-      # 6) Apply topics only after validation success
-      log "Applying topics: $TOPIC_1, $TOPIC_2"
-      gh repo edit "$FULL_REPO" --add-topic "$TOPIC_1" --add-topic "$TOPIC_2" >/dev/null
-      TOPICS_APPLIED="true"
-      STATUS="SUCCESS"
-      # (Topics are supported via --add-topic) [1](https://cli.github.com/manual/gh_repo_edit)
+    if ! git clone --mirror "$BB_URL" "$WORKDIR" >/dev/null; then
+      STATUS="FAIL"
+      ERROR_MSG="Failed to clone from $BB_URL"
+      log "ERROR: $ERROR_MSG"
     else
-      STATUS="FAIL_VALIDATION"
-      ERROR_MSG="Branch/tag count mismatch: src(branches=$SRC_BRANCHES,tags=$SRC_TAGS) dst(branches=$DST_BRANCHES,tags=$DST_TAGS)"
-      log "Validation FAILED: $ERROR_MSG"
-    fi
+      pushd "$WORKDIR" >/dev/null
 
-    popd >/dev/null
+      # Source counts from local mirror
+      SRC_BRANCHES="$(count_local_heads)"
+      SRC_TAGS="$(count_local_tags)"
+      log "Source counts -> branches=$SRC_BRANCHES tags=$SRC_TAGS"
+
+      # 3) Mirror push to GitHub
+      log "Pushing mirror to GitHub..."
+      git remote remove github >/dev/null 2>&1 || true
+      git remote add github "https://github.com/${FULL_REPO}.git"
+      git push --mirror github >/dev/null
+
+      # 4) Destination counts from remote
+      DST_BRANCHES="$(count_remote_heads "https://github.com/${FULL_REPO}.git")"
+      DST_TAGS="$(count_remote_tags  "https://github.com/${FULL_REPO}.git")"
+      log "Dest counts   -> branches=$DST_BRANCHES tags=$DST_TAGS"
+
+      # 5) Validate counts
+      if [[ "$SRC_BRANCHES" == "$DST_BRANCHES" && "$SRC_TAGS" == "$DST_TAGS" ]]; then
+        log "Validation PASSED (branch/tag counts match)."
+
+        # 6) Apply topics only after validation success
+        log "Applying topics: $TOPIC_1, $TOPIC_2, $TOPIC_3"
+        gh repo edit "$FULL_REPO" --add-topic "$TOPIC_1" --add-topic "$TOPIC_2" --add-topic "$TOPIC_3" >/dev/null
+        TOPICS_APPLIED="true"
+        STATUS="SUCCESS"
+      else
+        STATUS="FAIL_VALIDATION"
+        ERROR_MSG="Branch/tag count mismatch: src(branches=$SRC_BRANCHES,tags=$SRC_TAGS) dst(branches=$DST_BRANCHES,tags=$DST_TAGS)"
+        log "Validation FAILED: $ERROR_MSG"
+      fi
+
+      popd >/dev/null
+    fi
   } 2> >(tee -a "$LOG_FILE" >&2) || {
     # Any error inside the subshell ends up here
     STATUS="${STATUS:-FAIL}"

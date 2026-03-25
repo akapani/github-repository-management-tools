@@ -1,6 +1,22 @@
-# Usage Guide
+# Migration Tool – Usage Guide
 
-This guide provides **copy-paste examples** to help new users quickly migrate repositories using this tool.
+Migrate Git repositories from any source (Bitbucket, GitLab, etc.) to GitHub at scale with validation and audit logging.
+
+## Quick Start
+
+For the impatient:
+
+```bash
+# 1. Create repos.txt with SOURCE_URL OWNER REPO on each line
+# 2. Run dry-run first
+./migrate_repos.sh repos.txt --dry-run  # Preview what will happen
+
+# 3. Review logs/migration_*.log and reports/migration_report_*.csv
+# 4. Run for real
+./migrate_repos.sh repos.txt
+```
+
+⏱️ **Typical time per repository**: 30–120 seconds (depends on size and network)
 
 ---
 
@@ -24,13 +40,43 @@ gh auth login
 ## Repository Layout
 
 ```text
-repo-migration-tool/
-├── migrate_repos.sh
-├── repos.txt
-├── logs/
-├── reports/
+github-repository-migration-tools/
 ├── README.md
-└── USAGE.md
+├── LICENSE
+├── CHANGELOG.md
+├── CONTRIBUTING.md
+├── .editorconfig
+├── .gitignore
+│
+├── migrationTool/
+│   ├── migrate_repos.sh       (Main script)
+│   ├── repos.txt              (Your input file)
+│   └── USAGE.md
+│
+├── archiveTool/
+│   ├── archive_repos.sh       (Main script)
+│   ├── repos.txt              (Your input file)
+│   └── USAGE.md
+│
+├── examples/
+│   ├── repos_migration_example.txt
+│   ├── repos_archive_example.txt
+│   └── repos_unarchive_example.txt
+│
+├── docs/
+│   ├── TROUBLESHOOTING.md      (Common issues)
+│   ├── ARCHITECTURE.md         (How it works)
+│   └── CUSTOMIZATION.md        (How to extend)
+│
+├── lib/
+│   └── common.sh              (Shared utilities)
+│
+├── tests/
+│   ├── README.md              (Testing guide)
+│   └── validate_*.sh          (Output validators)
+│
+├── logs/                       (Generated on first run)
+└── reports/                    (Generated on first run)
 ```
 
 ---
@@ -121,12 +167,39 @@ The script is **idempotent**:
 
 ---
 
-## Common Customizations
+## Exit Codes
 
-Users often customize:
-- Topics applied to repos
-- Validation rules
-- Target GitHub org
-- Access assignment (teams/collaborators)
+| Code | Meaning |
+|------|----------|
+| `0` | Success (all repos processed; check CSV for individual status) |
+| `1` | Precondition failed (missing tools, no auth, file not found) |
 
-See `README.md` for design details.
+⚠️ **Note**: Individual repo failures don't halt the script. Check CSV/logs for per-repo status.
+
+---
+
+## Troubleshooting
+
+- **Git clone fails**: Check source repo access, SSH keys, or personal access tokens
+- **Branch/tag count mismatch**: Network interruption or source repo changed during migration
+- **Permission denied**: Ensure `gh auth login` ran and you have access to target org
+
+For detailed troubleshooting, see [docs/TROUBLESHOOTING.md](../docs/TROUBLESHOOTING.md).
+
+---
+
+## Customization
+
+Common extensions:
+- Assign teams with `gh repo add-collaborator`
+- Filter branches during migration
+- Add retry logic for large/slow repos
+- Integrate with Slack/Teams for notifications
+
+See [docs/CUSTOMIZATION.md](../docs/CUSTOMIZATION.md) for examples.
+
+---
+
+## How It Works
+
+For technical details on the migration process, see [docs/ARCHITECTURE.md](../docs/ARCHITECTURE.md).

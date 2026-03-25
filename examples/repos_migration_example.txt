@@ -1,0 +1,18 @@
+# Example repository list for migration from Bitbucket to GitHub
+# Format: SOURCE_CLONE_URL GITHUB_ORG GITHUB_REPO
+#
+# Instructions:
+# 1. Copy this file to repos.txt in the migrationTool/ directory
+# 2. Replace EXAMPLE_ORG with your actual GitHub organization
+# 3. Replace Bitbucket URLs and repository names as needed
+# 4. Run with --dry-run first to validate
+#
+# Example lines (uncomment and modify as needed):
+
+# Migrate from Bitbucket to GitHub organization "my-company"
+# https://user@bitbucket.org/my-workspace/order-service.git my-company order-service
+# https://user@bitbucket.org/my-workspace/payment-service.git my-company payment-service
+# https://user@bitbucket.org/my-workspace/auth-service.git my-company auth-service
+
+# You can also rename repos during migration:
+# https://user@bitbucket.org/old-workspace/legacy-repo.git my-company new-repo-name
