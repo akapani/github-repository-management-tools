@@ -12,9 +12,9 @@ CSV_FILE="${REPORT_DIR}/migration_report_${RUN_ID}.csv"
 mkdir -p "$LOG_DIR" "$REPORT_DIR"
 
 # Topics to apply to every successfully validated repo
-TOPIC_1="ccp"
-TOPIC_2="ccp-amt"
-#TOPIC_3="bt-poc"
+TOPIC_1="topic-example"
+TOPIC_2="topic-example"
+TOPIC_3="topic-example"
 
 # --- Helpers ---
 log() { echo "[$(date +'%Y-%m-%d %H:%M:%S')] $*" | tee -a "$LOG_FILE"; }
@@ -59,7 +59,7 @@ fi
 
 log "Starting migration run_id=$RUN_ID"
 log "Input: $INPUT_FILE"
-log "Topics: $TOPIC_1, $TOPIC_2"
+log "Topics: $TOPIC_1, $TOPIC_2, $TOPIC_3"
 log "CSV report: $CSV_FILE"
 
 # --- Main loop ---
@@ -129,8 +129,8 @@ while read -r BB_URL GH_ORG GH_REPO; do
         log "Validation PASSED (branch/tag counts match)."
 
         # 6) Apply topics only after validation success
-        log "Applying topics: $TOPIC_1, $TOPIC_2"
-        gh repo edit "$FULL_REPO" --add-topic "$TOPIC_1" --add-topic "$TOPIC_2" >/dev/null
+        log "Applying topics: $TOPIC_1, $TOPIC_2, $TOPIC_3"
+        gh repo edit "$FULL_REPO" --add-topic "$TOPIC_1" --add-topic "$TOPIC_2" --add-topic "$TOPIC_3" >/dev/null
         TOPICS_APPLIED="true"
         STATUS="SUCCESS"
       else
