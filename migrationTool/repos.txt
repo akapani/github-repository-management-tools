@@ -1,18 +1,7 @@
-# Bitbucket repositories for project: COMSS
-# Generated: 2026-04-14 12:15:15
-# Format: BITBUCKET_URL GITHUB_ORG GITHUB_REPO_NAME
-#
-https://bitbucket.org/apptiumtechnologies/comss-doc.git Apptium comss-doc
-https://bitbucket.org/apptiumtechnologies/comss-ecp.git Apptium comss-ecp
-https://bitbucket.org/apptiumtechnologies/comss-lm.git Apptium comss-lm
-https://bitbucket.org/apptiumtechnologies/comss-comapi.git Apptium comss-comapi
-https://bitbucket.org/apptiumtechnologies/comss-apiwq.git Apptium comss-apiwq
-https://bitbucket.org/apptiumtechnologies/comss-cust.git Apptium comss-cust
-https://bitbucket.org/apptiumtechnologies/comss-mp360.git Apptium comss-mp360
-https://bitbucket.org/apptiumtechnologies/comss-quote.git Apptium comss-quote
-https://bitbucket.org/apptiumtechnologies/comss-locat.git Apptium comss-locat
-https://bitbucket.org/apptiumtechnologies/comss-cartapi.git Apptium comss-cartapi
-https://bitbucket.org/apptiumtechnologies/comss-blank.git Apptium comss-blank
-https://bitbucket.org/apptiumtechnologies/comss-pom.git Apptium comss-pom
-https://bitbucket.org/apptiumtechnologies/comss-om.git Apptium comss-om
-https://bitbucket.org/apptiumtechnologies/comss-MPProSer.git Apptium comss-MPProSer
+# BITBUCKET_CLONE_URL GITHUB_ORG GITHUB_REPO
+https://example-user@bitbucket.org/example-workspace/order-service.git example-org order-service
+https://example-user@bitbucket.org/example-workspace/payment-service.git example-org payment-service
+https://example-user@bitbucket.org/example-workspace/user-profile-api.git example-org user-profile-api
+https://example-user@bitbucket.org/example-workspace/notification-worker.git example-org notification-worker
+https://example-user@bitbucket.org/example-workspace/reporting-dashboard.git example-org reporting-dashboard
+}
