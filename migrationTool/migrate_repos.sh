@@ -1,12 +1,20 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-INPUT_FILE="${1:-repos.txt}"
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+
+INPUT_FILE="${1:-${SCRIPT_DIR}/repos.txt}"
 RUN_ID="$(date +%Y%m%d_%H%M%S)"
-LOG_DIR="logs"
-REPORT_DIR="reports"
+LOG_DIR="${SCRIPT_DIR}/logs"
+REPORT_DIR="${SCRIPT_DIR}/reports"
 LOG_FILE="${LOG_DIR}/migration_${RUN_ID}.log"
 CSV_FILE="${REPORT_DIR}/migration_report_${RUN_ID}.csv"
+
+# If a relative input path was provided and doesn't exist in CWD,
+# try resolving it relative to the script directory.
+if [[ ! "$INPUT_FILE" = /* && ! -f "$INPUT_FILE" && -f "${SCRIPT_DIR}/$INPUT_FILE" ]]; then
+  INPUT_FILE="${SCRIPT_DIR}/$INPUT_FILE"
+fi
 
 # Ensure output directories exist
 mkdir -p "$LOG_DIR" "$REPORT_DIR"
