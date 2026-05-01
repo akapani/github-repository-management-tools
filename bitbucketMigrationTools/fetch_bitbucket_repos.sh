@@ -18,6 +18,7 @@ OPTIONS:
   -p, --project KEY               Bitbucket project key (required)
   -e, --email EMAIL               Atlassian account email (required)
   -t, --token TOKEN               Bitbucket API token (required)
+  -b, --bitbucket-username USER   Bitbucket username for Git clone URLs (optional)
   -o, --output FILE               Output file (default: repos.txt)
   -u, --bitbucket-url URL         Base Bitbucket URL (default: bitbucket.org)
   -g, --github-org ORG            GitHub organization for all repos (optional)
@@ -30,6 +31,7 @@ EXAMPLE:
     --project MY-PROJ \\
     --email user@example.com \\
     --token abc123token \\
+    --bitbucket-username my-user \\
     --output repos.txt \\
     --github-org my-github-org
 
@@ -42,6 +44,7 @@ WORKSPACE_ID=""
 PROJECT_KEY=""
 EMAIL=""
 API_TOKEN=""
+BITBUCKET_USERNAME=""
 OUTPUT_FILE="repos.txt"
 BITBUCKET_URL="bitbucket.org"
 GITHUB_ORG=""
@@ -64,6 +67,10 @@ while [[ $# -gt 0 ]]; do
       ;;
     -t|--token)
       API_TOKEN="$2"
+      shift 2
+      ;;
+    -b|--bitbucket-username)
+      BITBUCKET_USERNAME="$2"
       shift 2
       ;;
     -o|--output)
@@ -97,6 +104,11 @@ done
 [[ -n "$PROJECT_KEY" ]] || { echo "ERROR: Project key required (-p/--project)"; usage 1; }
 [[ -n "$EMAIL" ]] || { echo "ERROR: Email required (-e/--email)"; usage 1; }
 [[ -n "$API_TOKEN" ]] || { echo "ERROR: API token required (-t/--token)"; usage 1; }
+
+if [[ -z "$BITBUCKET_USERNAME" ]]; then
+  # Default to the email local-part so generated clone URLs avoid a username prompt.
+  BITBUCKET_USERNAME="${EMAIL%@*}"
+fi
 
 command -v jq >/dev/null || { echo "ERROR: jq not found. Install it: brew install jq"; exit 1; }
 
@@ -182,6 +194,7 @@ validate_output_file() {
 log "Fetching repositories from Bitbucket..."
 log "Workspace: $WORKSPACE_ID"
 log "Project: $PROJECT_KEY"
+log "Bitbucket clone username: $BITBUCKET_USERNAME"
 
 FILTERED_API_URL="https://api.bitbucket.org/2.0/repositories/${WORKSPACE_ID}?q=project.key%3D%22${PROJECT_KEY}%22&pagelen=100"
 UNFILTERED_API_URL="https://api.bitbucket.org/2.0/repositories/${WORKSPACE_ID}?pagelen=100"
@@ -228,7 +241,7 @@ log "Generating $OUTPUT_FILE..."
     fi
 
     # Construct Bitbucket clone URL
-    bb_url="https://${BITBUCKET_URL}/${WORKSPACE_ID}/${repo_name}.git"
+    bb_url="https://${BITBUCKET_USERNAME}@${BITBUCKET_URL}/${WORKSPACE_ID}/${repo_name}.git"
 
     # Determine GitHub org (use provided or prompt)
     if [[ -n "$GITHUB_ORG" ]]; then
