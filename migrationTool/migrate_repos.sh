@@ -182,4 +182,3 @@ done < "$INPUT_FILE"
 log "All done."
 log "CSV: $CSV_FILE"
 log "Log: $LOG_FILE"
-``
