@@ -18,6 +18,11 @@ The migration script:
 - Applies configured topics only when validation succeeds
 - Writes detailed logs and a CSV report
 
+For multi-project migrations with different topic sets in one run, use:
+- `migrationTool/migrate_repos_by_project.sh`
+- `migrationTool/merge_project_repo_lists.sh`
+- Optional map file: `migrationTool/project_topics.txt.example`
+
 ### 2) Archive Tool (`archiveTool/archive_repos.sh`)
 
 The archive script:
@@ -32,7 +37,8 @@ The archive script:
 - They do not migrate pull requests, issues, permissions, webhooks, or CI settings
 - They do not run in parallel (processing is sequential)
 - They do not manage credentials for you
-- The migration script currently has no `--dry-run` mode
+
+Note: `migrationTool/migrate_repos_by_project.sh` supports `--dry-run` for safe previews.
 
 ## Prerequisites
 
@@ -48,6 +54,13 @@ The archive script:
 ```bash
 cd migrationTool
 ./migrate_repos.sh repos.txt
+
+# Multi-project migration with project-specific topics
+./merge_project_repo_lists.sh --output repos_all_projects.txt repos_AP.txt repos_B2B.txt repos_OPS.txt
+./migrate_repos_by_project.sh repos_all_projects.txt --topics-map project_topics.txt.example --topics "migration"
+
+# Safe preview (no changes made)
+./migrate_repos_by_project.sh repos_all_projects.txt --topics-map project_topics.txt.example --topics "migration" --dry-run
 ```
 
 `repos.txt` format:

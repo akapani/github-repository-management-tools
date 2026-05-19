@@ -1,0 +1,6 @@
+# --- begin: migrationTool/repos_project_alpha.txt ---
+# Bitbucket repositories for project: PROJECT_ALPHA
+https://example-user@bitbucket.org/example-workspace/project-alpha-service-one.git example-org project-alpha-service-one PROJECT_ALPHA
+https://example-user@bitbucket.org/example-workspace/project-alpha-service-two.git example-org project-alpha-service-two PROJECT_ALPHA
+https://example-user@bitbucket.org/example-workspace/project-alpha-shared-lib.git example-org project-alpha-shared-lib PROJECT_ALPHA
+

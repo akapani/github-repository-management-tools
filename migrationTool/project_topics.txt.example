@@ -1,0 +1,6 @@
+# Format: PROJECT_KEY topic1,topic2,topic3
+# Use with: ./migrate_repos_by_project.sh repos.txt --topics-map project_topics.txt.example --topics "migration"
+
+PROJECT_ALPHA migration,alpha,platform
+PROJECT_BETA migration,beta,commerce
+PROJECT_GAMMA migration,operations,shared-services

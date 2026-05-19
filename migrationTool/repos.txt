@@ -1,7 +1,7 @@
-# BITBUCKET_CLONE_URL GITHUB_ORG GITHUB_REPO
-https://example-user@bitbucket.org/example-workspace/order-service.git example-org order-service
-https://example-user@bitbucket.org/example-workspace/payment-service.git example-org payment-service
-https://example-user@bitbucket.org/example-workspace/user-profile-api.git example-org user-profile-api
-https://example-user@bitbucket.org/example-workspace/notification-worker.git example-org notification-worker
-https://example-user@bitbucket.org/example-workspace/reporting-dashboard.git example-org reporting-dashboard
-}
+# Bitbucket repositories for project: PROJECT_ALPHA
+# Generated: YYYY-MM-DD HH:MM:SS
+# Format: BITBUCKET_URL GITHUB_ORG GITHUB_REPO_NAME
+#
+https://example-user@bitbucket.org/example-workspace/project-alpha-service-one.git example-org project-alpha-service-one
+https://example-user@bitbucket.org/example-workspace/project-alpha-service-two.git example-org project-alpha-service-two
+https://example-user@bitbucket.org/example-workspace/project-alpha-shared-lib.git example-org project-alpha-shared-lib

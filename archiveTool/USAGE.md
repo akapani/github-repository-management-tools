@@ -71,9 +71,9 @@ OWNER REPO
 ### Example
 
 ```text
-apptium b2bmp-test1
-apptium appdemo-blank
-apptium axidlg-blank
+example-org service-alpha
+example-org service-beta
+example-org service-gamma
 ```
 
 Notes:

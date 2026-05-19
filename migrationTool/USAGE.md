@@ -2,6 +2,11 @@
 
 Migrate Git repositories from any source (Bitbucket, GitLab, etc.) to GitHub at scale with validation and audit logging.
 
+This folder now contains two migration scripts:
+- `migrate_repos.sh` (legacy): one global topic set for all repos.
+- `migrate_repos_by_project.sh` (new): project-specific topics in a single run.
+- `merge_project_repo_lists.sh` (helper): merges multiple project repo files into one input.
+
 ## Quick Start
 
 For the impatient:
@@ -14,6 +19,20 @@ For the impatient:
 # 3. Review logs/migration_*.log and reports/migration_report_*.csv
 # 4. Run for real
 ./migrate_repos.sh repos.txt
+```
+
+For project-specific topics in one command:
+
+```bash
+./migrate_repos_by_project.sh repos.txt --topics-map project_topics.txt --topics "migration"
+./migrate_repos_by_project.sh repos.txt --topics-map project_topics.txt --topics "migration" --dry-run
+```
+
+If you have separate files per project, first merge them:
+
+```bash
+./merge_project_repo_lists.sh --output repos_all_projects.txt repos_AP.txt repos_B2B.txt repos_OPS.txt
+./migrate_repos_by_project.sh repos_all_projects.txt --topics-map project_topics.txt --topics "migration"
 ```
 
 ⏱️ **Typical time per repository**: 30–120 seconds (depends on size and network)
@@ -91,6 +110,12 @@ Each line represents **one repository migration**.
 SOURCE_CLONE_URL GITHUB_ORG GITHUB_REPO
 ```
 
+Optional (for project-specific topics with `migrate_repos_by_project.sh`):
+
+```text
+SOURCE_CLONE_URL GITHUB_ORG GITHUB_REPO PROJECT_KEY
+```
+
 ### Example (dummy data)
 
 ```text
@@ -102,6 +127,43 @@ Notes:
 - Space-separated values
 - Lines starting with `#` are ignored
 - Source and destination repo names do not have to match
+
+If `PROJECT_KEY` is not provided, the new script falls back to global topics passed by `--topics`.
+
+If your file contains Bitbucket fetch headers such as `# Bitbucket repositories for project: PROJECT_ALPHA`,
+`migrate_repos_by_project.sh` auto-detects and uses that project key for all following repo lines
+until the next project header.
+
+## Step 1b (Optional): Create `project_topics.txt`
+
+Use this file only with `migrate_repos_by_project.sh`.
+
+Format:
+
+```text
+PROJECT_KEY topic1,topic2,topic3
+```
+
+Example:
+
+```text
+PROJECT_ALPHA migration,alpha,platform
+PROJECT_BETA migration,beta,commerce
+PROJECT_GAMMA migration,operations,shared-services
+```
+
+## Step 1c (Optional): Merge Multiple Project Files
+
+Use this when your repo lists are generated separately per project.
+
+```bash
+./merge_project_repo_lists.sh --output repos_all_projects.txt repos_AP.txt repos_B2B.txt repos_OPS.txt
+```
+
+Notes:
+- Project headers are preserved.
+- Duplicate repo lines are removed automatically.
+- Output can be passed directly to `migrate_repos_by_project.sh`.
 
 ---
 
@@ -117,6 +179,15 @@ chmod +x migrate_repos.sh
 
 ```bash
 ./migrate_repos.sh repos.txt
+```
+
+Project-specific topics (single command for mixed projects):
+
+```bash
+./migrate_repos_by_project.sh repos.txt --topics-map project_topics.txt --topics "migration"
+
+# Safe preview mode (no create/clone/push/edit actions)
+./migrate_repos_by_project.sh repos.txt --topics-map project_topics.txt --topics "migration" --dry-run
 ```
 
 During execution:
@@ -143,7 +214,7 @@ The CSV includes:
 - Source repo
 - Destination repo
 - Branch and tag counts (source vs destination)
-- Status: `SUCCESS`, `FAIL`, or `FAIL_VALIDATION`
+- Status: `SUCCESS`, `FAIL`, `FAIL_VALIDATION`, or `DRY_RUN`
 
 ---
 
